@@ -1,6 +1,8 @@
 
 package View;
 
+import javax.swing.JOptionPane;
+
 public class Register extends javax.swing.JPanel {
 
     public Frame frame;
@@ -37,6 +39,11 @@ public class Register extends javax.swing.JPanel {
         usernameFld.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         usernameFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         usernameFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "USERNAME", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        usernameFld.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                usernameFldKeyReleased(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -97,11 +104,18 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
-        usernameFld.setText("");
-        passwordFld.setText("");
-        confpassFld.setText("");
-        frame.loginNav();
+        if (!passwordFld.getText().equals(confpassFld.getText())) {
+            JOptionPane.showMessageDialog(null, "Error: Passwords do not match.", "Error: Registration", JOptionPane.OK_OPTION);
+        }
+        else { 
+            frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
+            JOptionPane.showMessageDialog(null, "Registration Successful", "Success: Registration", JOptionPane.OK_OPTION);
+            
+            usernameFld.setText("");
+            passwordFld.setText("");
+            confpassFld.setText("");
+            frame.loginNav();
+        }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
@@ -111,7 +125,12 @@ public class Register extends javax.swing.JPanel {
         frame.loginNav();
     }//GEN-LAST:event_backBtnActionPerformed
 
-
+    private void usernameFldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFldKeyReleased
+        if(frame.main.sqlite.doesUserExist(usernameFld.getText())) {
+            JOptionPane.showMessageDialog(null, "Error: Username already exists.", "Error: Registration", JOptionPane.OK_OPTION);
+        }
+    }//GEN-LAST:event_usernameFldKeyReleased
+     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
     private javax.swing.JTextField confpassFld;

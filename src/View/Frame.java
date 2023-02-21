@@ -257,7 +257,13 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void registerAction(String username, String password, String confpass){
-        main.sqlite.addUser(username, password);
+        if(!main.sqlite.doesUserExist(username))
+            main.sqlite.addUser(username, password);
+        else System.out.println("username already exists!");
+    }
+    
+    public boolean checkExistingUsers(String username) {
+        return main.sqlite.doesUserExist(username);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

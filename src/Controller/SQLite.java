@@ -9,6 +9,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 public class SQLite {
@@ -316,5 +317,33 @@ public class SQLite {
             System.out.print(ex);
         }
         return product;
+    }
+    
+    public boolean doesUserExist(String username){
+        String sql = "SELECT username FROM users WHERE username=?";
+        ArrayList<String> existingUsers = new ArrayList<String>();
+            
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                existingUsers.add(rs.getString("username"));
+            }
+            
+            System.out.println(existingUsers);
+            
+            if(existingUsers.isEmpty()) {
+                System.out.println("username is free");
+                return false;
+            }
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("username already exists!");
+        return true;
     }
 }
