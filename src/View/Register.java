@@ -1,6 +1,7 @@
 
 package View;
 
+import java.awt.Color;
 import javax.swing.JOptionPane;
 
 public class Register extends javax.swing.JPanel {
@@ -21,9 +22,20 @@ public class Register extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         confpassFld = new javax.swing.JPasswordField();
         backBtn = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        securityQ1 = new javax.swing.JComboBox<>();
+        securityQ2 = new javax.swing.JComboBox<>();
+        securityA1 = new javax.swing.JTextField();
+        securityA2 = new javax.swing.JTextField();
+        passStrength = new javax.swing.JProgressBar();
+        passToolTip = new javax.swing.JTextField();
+        passToolTip.setVisible(false);
+
+        setAutoscrolls(true);
 
         registerBtn.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         registerBtn.setText("REGISTER");
+        registerBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         registerBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registerBtnActionPerformed(evt);
@@ -34,6 +46,19 @@ public class Register extends javax.swing.JPanel {
         passwordFld.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         passwordFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        passwordFld.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                passwordFldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                passwordFldFocusLost(evt);
+            }
+        });
+        passwordFld.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                passwordFldKeyReleased(evt);
+            }
+        });
 
         usernameFld.setBackground(new java.awt.Color(240, 240, 240));
         usernameFld.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -63,51 +88,139 @@ public class Register extends javax.swing.JPanel {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setText("Choose 2 different questions that only you can answer.");
+
+        securityQ1.setBackground(new java.awt.Color(240, 240, 240));
+        securityQ1.setEditable(true);
+        securityQ1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Security Question 1", "Item 2", "Item 3", "Item 4" }));
+        securityQ1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+
+        securityQ2.setBackground(new java.awt.Color(240, 240, 240));
+        securityQ2.setEditable(true);
+        securityQ2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Security Question 2", "Item 2", "Item 3", "Item 4" }));
+        securityQ2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+
+        securityA1.setBackground(new java.awt.Color(240, 240, 240));
+        securityA1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        securityA1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        securityA1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "ANSWER 1", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        securityA2.setBackground(new java.awt.Color(240, 240, 240));
+        securityA2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        securityA2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        securityA2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "ANSWER 2", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        passToolTip.setText("TEXT TEXT");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(200, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(usernameFld)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(passwordFld, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(confpassFld, javax.swing.GroupLayout.Alignment.LEADING))
-                .addContainerGap(200, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(backBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(backBtn))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(270, 270, 270)
+                                .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(216, 216, 216)
+                                .addComponent(jLabel2)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(268, 268, 268)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(passStrength, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(securityA2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(securityA1)
+                            .addComponent(securityQ1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(usernameFld)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(confpassFld, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(securityQ2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(passwordFld, javax.swing.GroupLayout.Alignment.LEADING))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(passToolTip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(backBtn)
-                .addGap(24, 24, 24)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(passwordFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(confpassFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                        .addComponent(passwordFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(passStrength, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38)
+                        .addComponent(confpassFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(passToolTip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(141, 141, 141)))
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(securityQ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(securityA1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(securityQ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(securityA2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addGap(14, 14, 14))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
+        boolean registerable = true;
+        
+        // if passwords match
         if (!passwordFld.getText().equals(confpassFld.getText())) {
+            registerable = false;
             JOptionPane.showMessageDialog(null, "Error: Passwords do not match.", "Error: Registration", JOptionPane.OK_OPTION);
         }
-        else { 
+        
+        // if security questions are different
+        if (securityQ1.getSelectedIndex() == securityQ2.getSelectedIndex()) {
+            registerable = false;
+            JOptionPane.showMessageDialog(null, "Error: Please select two different security questions.", "Error: Registration", JOptionPane.OK_OPTION);
+        }
+        
+        // if security questions were answered
+        if (securityA1.getText().length() == 0 || securityA2.getText().length() == 0) {
+            registerable = false;
+            JOptionPane.showMessageDialog(null, "Error: Please answer the security questions.", "Error: Registration", JOptionPane.OK_OPTION);
+        }
+        
+        // if fields are not empty
+        if (passwordFld.getText().length() == 0 || confpassFld.getText().length() == 0 || usernameFld.getText().length() == 0) {
+            registerable = false;
+            JOptionPane.showMessageDialog(null, "Error: Please do not leave the fields blank.", "Error: Registration", JOptionPane.OK_OPTION);
+        }
+        
+        switch(frame.main.checkPassStrength(passwordFld.getText())) {
+            case "Strong":
+                break;
+            default:
+                registerable = false;
+                JOptionPane.showMessageDialog(null, "Error: Password is too weak.", "Error: Registration", JOptionPane.OK_OPTION);
+                break;
+        }
+            
+        if(registerable) { 
             frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
             JOptionPane.showMessageDialog(null, "Registration Successful", "Success: Registration", JOptionPane.OK_OPTION);
             
@@ -130,13 +243,55 @@ public class Register extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Error: Username already exists.", "Error: Registration", JOptionPane.OK_OPTION);
         }
     }//GEN-LAST:event_usernameFldKeyReleased
+
+    private void passwordFldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFldKeyReleased
+        String inputPassword = passwordFld.getText();
+        System.out.println(frame.main.checkPassStrength(inputPassword));
+        switch(frame.main.checkPassStrength(inputPassword)) {
+            case "Strong":
+                passStrength.setValue(100);
+                passStrength.setForeground(Color.green);
+                break;
+            case "Medium":
+                passStrength.setValue(50);
+                passStrength.setForeground(Color.orange);
+                break;
+            case "Weak":
+                passStrength.setValue(20);
+                passStrength.setForeground(Color.red);
+                break;
+            default:
+                passStrength.setValue(5);
+                passStrength.setForeground(Color.red);
+                break;
+        }
+    }//GEN-LAST:event_passwordFldKeyReleased
+
+    private void passwordFldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordFldFocusGained
+        System.out.println("password field focused");
+        passToolTip.setVisible(true);
+        revalidate();
+    }//GEN-LAST:event_passwordFldFocusGained
+
+    private void passwordFldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordFldFocusLost
+        System.out.println("password field lost");
+        passToolTip.setVisible(false);
+        revalidate();
+    }//GEN-LAST:event_passwordFldFocusLost
      
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
     private javax.swing.JTextField confpassFld;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JProgressBar passStrength;
+    private javax.swing.JTextField passToolTip;
     private javax.swing.JTextField passwordFld;
     private javax.swing.JButton registerBtn;
+    private javax.swing.JTextField securityA1;
+    private javax.swing.JTextField securityA2;
+    private javax.swing.JComboBox<String> securityQ1;
+    private javax.swing.JComboBox<String> securityQ2;
     private javax.swing.JTextField usernameFld;
     // End of variables declaration//GEN-END:variables
 }

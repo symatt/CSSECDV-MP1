@@ -105,4 +105,17 @@ public class Main {
         frame.init(this);
     }
     
+    public String checkPassStrength(String inputPassword) {
+        if (inputPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(.{8,})")) {
+            return "Strong";
+        } else if (inputPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(.{8,})")){
+            return "Medium";
+        } else if (inputPassword.matches("^(?=.*[a-z])(?=.*[0-9])(.{8,})")){
+            return "Weak";
+        } else if (inputPassword.matches("^(?=.*[A-Z])(?=.*[0-9])(.{8,})")){
+            return "Weak";
+        }
+        return "Too Short";
+    }
+    
 }
