@@ -32,12 +32,14 @@ public class Main {
 //        sqlite.dropLogsTable();
 //        sqlite.dropProductTable();
 //        sqlite.dropUserTable();
+//        sqlite.dropSecQuesTable();
 //        
 //        // Create users table if not exist
 //        sqlite.createHistoryTable();
 //        sqlite.createLogsTable();
 //        sqlite.createProductTable();
 //        sqlite.createUserTable();
+//        sqlite.createSecQuesTable();
 //        
 //        // Add sample history
 //        sqlite.addHistory("admin", "Antivirus", 1, "2019-04-03 14:30:00.000");
@@ -55,12 +57,21 @@ public class Main {
 //        sqlite.addProduct("Scanner", 10, 100.0);
 //
 //        // Add sample users
-//        sqlite.addUser("admin", "qwerty1234" , 5);
+//        sqlite.addUser("admin", "qwerty1234", 5);
 //        sqlite.addUser("manager", "qwerty1234", 4);
 //        sqlite.addUser("staff", "qwerty1234", 3);
 //        sqlite.addUser("client1", "qwerty1234", 2);
 //        sqlite.addUser("client2", "qwerty1234", 2);
 //        
+//        sqlite.addSecQues("In what city were you born?");
+//        sqlite.addSecQues("What is your mother's maiden name?");
+//        sqlite.addSecQues("What was your favorite food as a child?");
+//        sqlite.addSecQues("What year was your father (or mother) born?");
+//        sqlite.addSecQues("What is the name of your favorite pet?");
+//        sqlite.addSecQues("What high school did you attend?");
+//        sqlite.addSecQues("What was the name of your elementary school?");
+//        sqlite.addSecQues("What street did you live on in third grade?");
+
 //        
 //        // Get users
 //        ArrayList<History> histories = sqlite.getHistory();

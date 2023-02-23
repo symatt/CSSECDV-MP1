@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SQLite {
     
@@ -86,6 +87,10 @@ public class SQLite {
             + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + " username TEXT NOT NULL UNIQUE,\n"
             + " password TEXT NOT NULL,\n"
+            + " q1 INTEGER NOT NULL,\n"
+            + " a1 TEXT NOT NULL,\n"
+            + " q2 INTEGER NOT NULL,\n"
+            + " a2 TEXT NOT NULL,\n"
             + " role INTEGER DEFAULT 2,\n"
             + " locked INTEGER DEFAULT 0\n"
             + ");";
@@ -94,6 +99,21 @@ public class SQLite {
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
             System.out.println("Table users in database.db created.");
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    public void createSecQuesTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS secques (\n"
+            + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + " question TEXT NOT NULL\n"
+            + ");";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Table secques in database.db created.");
         } catch (Exception ex) {
             System.out.print(ex);
         }
@@ -147,6 +167,18 @@ public class SQLite {
         }
     }
     
+    public void dropSecQuesTable() {
+        String sql = "DROP TABLE IF EXISTS secques;";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Table secques in database.db dropped.");
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
     public void addHistory(String username, String name, int stock, String timestamp) {
         String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES('" + username + "','" + name + "','" + stock + "','" + timestamp + "')";
         
@@ -180,19 +212,33 @@ public class SQLite {
         }
     }
     
-    public void addUser(String username, String password) {
-        String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
+    public void addUser(String username, String password, int securityQ1, String securityA1, int securityQ2, String securityA2) {
+        String sql = "INSERT INTO users(username,password,q1,a1,q2,a2) VALUES(?,?,?,?,?,?)";
         
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.setInt(3, securityQ1);
+            pstmt.setString(4, securityA1);
+            pstmt.setInt(5, securityQ2);
+            pstmt.setString(6, securityA2);
             
-//      PREPARED STATEMENT EXAMPLE
-//      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
-//      PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//      pstmt.setString(1, username);
-//      pstmt.setString(2, password);
-//      pstmt.executeUpdate();
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+    }
+    
+    public void addSecQues(String ques) {
+        String sql = "INSERT INTO secques(question) VALUES(?)";
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, ques);
+            pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
@@ -278,6 +324,25 @@ public class SQLite {
             }
         } catch (Exception ex) {}
         return users;
+    }
+    
+    public List<String> getSecQues(){
+        String sql = "SELECT question FROM secques";
+        List<String> secques = new ArrayList<>();
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)){
+            
+            while (rs.next()) {
+                secques.add(rs.getString("question"));
+            }
+        } catch (Exception ex) {}
+//        String[] secquesArr = new String[secques.size()];
+//        secques.toArray(secquesArr);
+//        System.out.println(secquesArr);
+        return secques;
+        
     }
     
     public void addUser(String username, String password, int role) {

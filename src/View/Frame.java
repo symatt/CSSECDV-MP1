@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import javax.swing.WindowConstants;
+import java.util.*;
 
 public class Frame extends javax.swing.JFrame {
 
@@ -256,14 +257,24 @@ public class Frame extends javax.swing.JFrame {
         frameView.show(Container, "registerPnl");
     }
     
-    public void registerAction(String username, String password, String confpass){
+    public void registerAction(String username, String password, String confpass, int securityQ1, String securityA1, int securityQ2, String securityA2) {
+        securityQ1 -= 1;
+        securityQ2 -= 1;
+//        System.out.println(securityQ1);
+//        System.out.println(securityA1);
+//        System.out.println(securityQ2);
+//        System.out.println(securityA2);
         if(!main.sqlite.doesUserExist(username))
-            main.sqlite.addUser(username, password);
+            main.sqlite.addUser(username, password, securityQ1, securityA1, securityQ2, securityA2);
         else System.out.println("username already exists!");
     }
     
     public boolean checkExistingUsers(String username) {
         return main.sqlite.doesUserExist(username);
+    }
+    
+    public List<String> getSecQues() {
+        return main.sqlite.getSecQues();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
