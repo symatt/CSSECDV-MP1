@@ -264,9 +264,8 @@ public class Frame extends javax.swing.JFrame {
 //        System.out.println(securityA1);
 //        System.out.println(securityQ2);
 //        System.out.println(securityA2);
-        if(!main.sqlite.doesUserExist(username))
-            main.sqlite.addUser(username, password, securityQ1, securityA1, securityQ2, securityA2);
-        else System.out.println("username already exists!");
+        main.sqlite.addUser(username, password, securityQ1, securityA1, securityQ2, securityA2);
+        
     }
     
     public boolean checkExistingUsers(String username) {

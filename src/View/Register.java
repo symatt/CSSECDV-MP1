@@ -2,6 +2,7 @@
 package View;
 
 import java.awt.Color;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.JOptionPane;
 import java.util.*;
 
@@ -31,6 +32,7 @@ public class Register extends javax.swing.JPanel {
         passStrength = new javax.swing.JProgressBar();
         passToolTip = new javax.swing.JTextArea();
         passToolTip.setVisible(false);
+        passStrengthLabel = new javax.swing.JTextField();
 
         setAutoscrolls(true);
 
@@ -112,13 +114,21 @@ public class Register extends javax.swing.JPanel {
         securityA2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         securityA2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "ANSWER 2", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
+        passStrength.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        passToolTip.setEditable(false);
         passToolTip.setColumns(20);
         passToolTip.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         passToolTip.setLineWrap(true);
         passToolTip.setRows(10);
-        passToolTip.setText("-Password should be atleast 8 characters long.\n-Password should include atleast 1 uppercase and 1 lowercase letter.\n-Password should include 1 number and 1 symbol.");
+        passToolTip.setText("-Password should be 8-32 characters long.\n-Password should include atleast 1 uppercase and 1 lowercase letter.\n-Password should include 1 number and 1 symbol.");
         passToolTip.setToolTipText("");
         passToolTip.setWrapStyleWord(true);
+
+        passStrengthLabel.setEditable(false);
+        passStrengthLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        passStrengthLabel.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        passStrengthLabel.setBorder(null);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -131,7 +141,7 @@ public class Register extends javax.swing.JPanel {
                         .addComponent(backBtn)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(268, 268, 268)
+                        .addGap(322, 322, 322)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(confpassFld, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(securityA2)
@@ -141,19 +151,21 @@ public class Register extends javax.swing.JPanel {
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(securityQ2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(passwordFld)
-                            .addComponent(passStrength, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(passStrength, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(passStrengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(passToolTip, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(173, 173, 173))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(246, 246, 246))))
+                .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,15 +177,17 @@ public class Register extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(passwordFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(passStrength, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(passStrengthLabel)
+                            .addComponent(passStrength, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(confpassFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(passToolTip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(securityQ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -183,9 +197,9 @@ public class Register extends javax.swing.JPanel {
                 .addComponent(securityQ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(securityA2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -233,10 +247,11 @@ public class Register extends javax.swing.JPanel {
         }
         
             
-        if(registerable) { 
-            frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText(), securityQ1.getSelectedIndex(), securityA1.getText(), securityQ2.getSelectedIndex(), securityA2.getText());
-            JOptionPane.showMessageDialog(null, "Registration Successful", "Success: Registration", JOptionPane.OK_OPTION);
+        if(registerable) {
             
+            frame.main.sqlite.addUser(usernameFld.getText(), passwordFld.getText(), securityQ1.getSelectedIndex(), securityA1.getText(), securityQ2.getSelectedIndex(), securityA2.getText());
+            JOptionPane.showMessageDialog(null, "Registration Successful", "Success: Registration", JOptionPane.OK_OPTION);
+
             usernameFld.setText("");
             passwordFld.setText("");
             confpassFld.setText("");
@@ -259,25 +274,39 @@ public class Register extends javax.swing.JPanel {
 
     private void passwordFldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFldKeyReleased
         String inputPassword = passwordFld.getText();
-        System.out.println(frame.main.checkPassStrength(inputPassword));
-        switch(frame.main.checkPassStrength(inputPassword)) {
+        String strength = frame.main.checkPassStrength(inputPassword);
+        System.out.println(strength);
+
+        switch(strength) {
             case "Strong":
                 passStrength.setValue(100);
-                passStrength.setForeground(Color.green);
+                passStrength.setForeground(new Color(17, 107, 20));
+                passStrengthLabel.setForeground(new Color(17, 107, 20));
                 break;
-            case "Medium":
-                passStrength.setValue(50);
+            case "Good":
+                passStrength.setValue(60);
+                passStrength.setForeground(Color.blue);
+                passStrengthLabel.setForeground(Color.blue);
+                break;
+            case "Fair":
+                passStrength.setValue(30);
                 passStrength.setForeground(Color.orange);
+                passStrengthLabel.setForeground(Color.orange);
                 break;
             case "Weak":
                 passStrength.setValue(20);
                 passStrength.setForeground(Color.red);
+                passStrengthLabel.setForeground(Color.red);
                 break;
             default:
-                passStrength.setValue(5);
+                passStrength.setValue(0);
                 passStrength.setForeground(Color.red);
+                passStrengthLabel.setForeground(Color.gray);
                 break;
         }
+        
+        passStrengthLabel.setText(strength);
+        revalidate();
     }//GEN-LAST:event_passwordFldKeyReleased
 
     private void passwordFldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordFldFocusGained
@@ -310,6 +339,7 @@ public class Register extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JProgressBar passStrength;
+    private javax.swing.JTextField passStrengthLabel;
     private javax.swing.JTextArea passToolTip;
     private javax.swing.JTextField passwordFld;
     private javax.swing.JButton registerBtn;

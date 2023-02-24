@@ -6,9 +6,14 @@ import Model.Logs;
 import Model.Product;
 import Model.User;
 import View.Frame;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.security.SecureRandom;
 
 
 
@@ -27,19 +32,19 @@ public class Main {
 //        // Create a database
 //        sqlite.createNewDatabase();
 //        
-//        // Drop users table if needed
-//        sqlite.dropHistoryTable();
-//        sqlite.dropLogsTable();
-//        sqlite.dropProductTable();
-//        sqlite.dropUserTable();
-//        sqlite.dropSecQuesTable();
+        // Drop users table if needed
+        sqlite.dropHistoryTable();
+        sqlite.dropLogsTable();
+        sqlite.dropProductTable();
+        sqlite.dropUserTable();
+        sqlite.dropSecQuesTable();
 //        
-//        // Create users table if not exist
-//        sqlite.createHistoryTable();
-//        sqlite.createLogsTable();
-//        sqlite.createProductTable();
-//        sqlite.createUserTable();
-//        sqlite.createSecQuesTable();
+        // Create users table if not exist
+        sqlite.createHistoryTable();
+        sqlite.createLogsTable();
+        sqlite.createProductTable();
+        sqlite.createUserTable();
+        sqlite.createSecQuesTable();
 //        
 //        // Add sample history
 //        sqlite.addHistory("admin", "Antivirus", 1, "2019-04-03 14:30:00.000");
@@ -63,14 +68,14 @@ public class Main {
 //        sqlite.addUser("client1", "qwerty1234", 2);
 //        sqlite.addUser("client2", "qwerty1234", 2);
 //        
-//        sqlite.addSecQues("In what city were you born?");
-//        sqlite.addSecQues("What is your mother's maiden name?");
-//        sqlite.addSecQues("What was your favorite food as a child?");
-//        sqlite.addSecQues("What year was your father (or mother) born?");
-//        sqlite.addSecQues("What is the name of your favorite pet?");
-//        sqlite.addSecQues("What high school did you attend?");
-//        sqlite.addSecQues("What was the name of your elementary school?");
-//        sqlite.addSecQues("What street did you live on in third grade?");
+        sqlite.addSecQues("In what city were you born?");
+        sqlite.addSecQues("What is your mother's maiden name?");
+        sqlite.addSecQues("What was your favorite food as a child?");
+        sqlite.addSecQues("What year was your father (or mother) born?");
+        sqlite.addSecQues("What is the name of your favorite pet?");
+        sqlite.addSecQues("What high school did you attend?");
+        sqlite.addSecQues("What was the name of your elementary school?");
+        sqlite.addSecQues("What street did you live on in third grade?");
 
 //        
 //        // Get users
@@ -117,16 +122,40 @@ public class Main {
     }
     
     public String checkPassStrength(String inputPassword) {
-        if (inputPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(.{8,})")) {
-            return "Strong";
-        } else if (inputPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(.{8,})")){
-            return "Medium";
-        } else if (inputPassword.matches("^(?=.*[a-z])(?=.*[0-9])(.{8,})")){
-            return "Weak";
-        } else if (inputPassword.matches("^(?=.*[A-Z])(?=.*[0-9])(.{8,})")){
-            return "Weak";
+        int count = 0;
+
+        if(inputPassword.length() >= 8 && inputPassword.length() <= 32) {
+            if(inputPassword.matches(".*[a-z].*"))
+                count++;
+            if(inputPassword.matches(".*[A-Z].*"))
+                count++;
+            if(inputPassword.matches(".*\\d.*"))
+                count++;
+            if(inputPassword.matches(".*[*.!@#$%^&=_+-].*"))
+                count++;
         }
-        return "Too Short";
+        else if (inputPassword.length() > 32)
+            return "Too Long";
+        
+        String passwordStrength;
+        
+        switch(count) {
+            case 1:
+                passwordStrength = "Weak";
+               break;
+            case 2:
+                passwordStrength = "Fair";
+               break;
+            case 3:
+                passwordStrength = "Good";
+               break;
+            case 4:
+                passwordStrength = "Strong";
+               break;
+            default:
+                passwordStrength = "Too Short";
+        }
+        
+        return passwordStrength; 
     }
-    
 }

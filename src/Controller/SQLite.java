@@ -4,6 +4,9 @@ import Model.History;
 import Model.Logs;
 import Model.Product;
 import Model.User;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -87,6 +90,7 @@ public class SQLite {
             + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + " username TEXT NOT NULL UNIQUE,\n"
             + " password TEXT NOT NULL,\n"
+            + " salt TEXT NOT NULL,\n"
             + " q1 INTEGER NOT NULL,\n"
             + " a1 TEXT NOT NULL,\n"
             + " q2 INTEGER NOT NULL,\n"
@@ -213,17 +217,27 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int securityQ1, String securityA1, int securityQ2, String securityA2) {
-        String sql = "INSERT INTO users(username,password,q1,a1,q2,a2) VALUES(?,?,?,?,?,?)";
+        String salt = null;
+        String generatedpassword = null;
+        try {
+            salt = getSalt();
+            generatedpassword = getSecurePassword(password, salt);
+        } catch(Exception ex) {
+            System.out.println(ex);
+        }
+        
+        String sql = "INSERT INTO users(username,password,salt,q1,a1,q2,a2) VALUES(?,?,?,?,?,?,?)";
         
         try {
             Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
-            pstmt.setString(2, password);
-            pstmt.setInt(3, securityQ1);
-            pstmt.setString(4, securityA1);
-            pstmt.setInt(5, securityQ2);
-            pstmt.setString(6, securityA2);
+            pstmt.setString(2, generatedpassword);
+            pstmt.setString(3, salt);
+            pstmt.setInt(4, securityQ1);
+            pstmt.setString(5, securityA1);
+            pstmt.setInt(6, securityQ2);
+            pstmt.setString(7, securityA2);
             
             pstmt.executeUpdate();
         } catch (Exception ex) {
@@ -346,12 +360,28 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int role) {
-        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
         
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+        String salt = null;
+        String generatedpassword = null;
+        try {
+            salt = getSalt();
+            generatedpassword = getSecurePassword(password, salt);
+            System.out.println(generatedpassword);
+        } catch(Exception ex) {
+            System.out.println(ex);
+        }
+        
+        String sql = "INSERT INTO users(username,password,salt,role) VALUES(?,?,?,?)";
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            pstmt.setString(2, generatedpassword);
+            pstmt.setString(3, salt);
+            pstmt.setInt(4, role);
             
+            pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
@@ -410,5 +440,30 @@ public class SQLite {
         }
         System.out.println("username already exists!");
         return true;
+    }
+    
+     private static String getSalt() throws NoSuchAlgorithmException {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        return salt.toString();
+    }
+    
+    public static String getSecurePassword(String password, String salt) {
+        String generatedPassword = null;
+        byte[] saltBytes = salt.getBytes();
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(saltBytes);
+            byte[] bytes = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < bytes.length; i++) {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return generatedPassword;
     }
 }
