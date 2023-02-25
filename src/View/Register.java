@@ -255,6 +255,13 @@ public class Register extends javax.swing.JPanel {
             usernameFld.setText("");
             passwordFld.setText("");
             confpassFld.setText("");
+            passStrength.setValue(0);
+            passStrengthLabel.setText("");
+            securityQ1.setSelectedIndex(0);
+            securityA1.setText("");
+            securityQ2.setSelectedIndex(0);
+            securityA2.setText("");
+            
             frame.loginNav();
         }
     }//GEN-LAST:event_registerBtnActionPerformed
@@ -263,6 +270,12 @@ public class Register extends javax.swing.JPanel {
         usernameFld.setText("");
         passwordFld.setText("");
         confpassFld.setText("");
+        passStrength.setValue(0);
+        passStrengthLabel.setText("");
+        securityQ1.setSelectedIndex(0);
+        securityA1.setText("");
+        securityQ2.setSelectedIndex(0);
+        securityA2.setText("");
         frame.loginNav();
     }//GEN-LAST:event_backBtnActionPerformed
 
