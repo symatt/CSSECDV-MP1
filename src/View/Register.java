@@ -209,31 +209,31 @@ public class Register extends javax.swing.JPanel {
         // if passwords match
         if (!passwordFld.getText().equals(confpassFld.getText())) {
             registerable = false;
-            JOptionPane.showMessageDialog(null, "Error: Passwords do not match.", "Error: Registration", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(null, "Error: Passwords do not match.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
         }
         
         // if security questions are index 0
         else if (securityQ1.getSelectedIndex() == 0 || securityQ2.getSelectedIndex() == 0) {
             registerable = false;
-            JOptionPane.showMessageDialog(null, "Error: Please select valid security questions.", "Error: Registration", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(null, "Error: Please select valid security questions.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
         }
 
         // if security questions are different
         else if (securityQ1.getSelectedIndex() == securityQ2.getSelectedIndex()) {
             registerable = false;
-            JOptionPane.showMessageDialog(null, "Error: Please select two different security questions.", "Error: Registration", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(null, "Error: Please select two different security questions.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
         }
         
         // if security questions were answered
         else if (securityA1.getText().length() == 0 || securityA2.getText().length() == 0) {
             registerable = false;
-            JOptionPane.showMessageDialog(null, "Error: Please answer the security questions.", "Error: Registration", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(null, "Error: Please answer the security questions.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
         }
         
         // if fields are not empty
         else if (passwordFld.getText().length() == 0 || confpassFld.getText().length() == 0 || usernameFld.getText().length() == 0) {
             registerable = false;
-            JOptionPane.showMessageDialog(null, "Error: Please do not leave the fields blank.", "Error: Registration", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(null, "Error: Please do not leave the fields blank.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
         }
         
         // if password is strong enough
@@ -242,7 +242,7 @@ public class Register extends javax.swing.JPanel {
                 break;
             default:
                 registerable = false;
-                JOptionPane.showMessageDialog(null, "Error: Password is too weak.", "Error: Registration", JOptionPane.OK_OPTION);
+                JOptionPane.showMessageDialog(null, "Error: Password is too weak.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
                 break;
         }
         
@@ -251,7 +251,7 @@ public class Register extends javax.swing.JPanel {
             
             frame.main.sqlite.addUser(usernameFld.getText(), passwordFld.getText(), securityQ1.getSelectedIndex(), securityA1.getText(), securityQ2.getSelectedIndex(), securityA2.getText());
             frame.main.sqlite.addLogs("REGISTER", usernameFld.getText(), "User successfully registered.");
-            JOptionPane.showMessageDialog(null, "Registration Successful", "Success: Registration", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(null, "Registration Successful", "Success: Registration", JOptionPane.PLAIN_MESSAGE);
             usernameFld.setText("");
             passwordFld.setText("");
             confpassFld.setText("");
@@ -281,7 +281,7 @@ public class Register extends javax.swing.JPanel {
 
     private void usernameFldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFldKeyReleased
         if(frame.main.sqlite.doesUserExist(usernameFld.getText())) {
-            JOptionPane.showMessageDialog(null, "Error: Username already exists.", "Error: Registration", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(null, "Error: Username already exists.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_usernameFldKeyReleased
 
