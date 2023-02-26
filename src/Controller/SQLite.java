@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
 
 public class SQLite {
     
@@ -194,12 +195,19 @@ public class SQLite {
         }
     }
     
-    public void addLogs(String event, String username, String desc, String timestamp) {
-        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + event + "','" + username + "','" + desc + "','" + timestamp + "')";
+    public void addLogs(String event, String username, String desc) {
+        String timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES(?,?,?,?)";
         
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, event);
+            pstmt.setString(2, username);
+            pstmt.setString(3, desc);
+            pstmt.setString(4, timestamp);
+            
+            pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
