@@ -112,9 +112,9 @@ public class Login extends javax.swing.JPanel {
         if (frame.main.sqlite.getLoginLogs(usernameFld.getText())) {
             if (frame.main.sqlite.doesUserExist(usernameFld.getText())){
                 if (frame.main.sqlite.validatePassword(usernameFld.getText(), passwordFld.getText())) {
+                    frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Success");
                     usernameFld.setText("");
                     passwordFld.setText("");
-                    frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Success");
                     frame.mainNav();
                 }
                 else {

@@ -312,7 +312,7 @@ public class SQLite {
     }
     
     public boolean getLoginLogs(String user){
-        String sql = "SELECT id, event, username, desc, timestamp FROM logs LIMIT 3";
+        String sql = "SELECT id, event, username, desc, timestamp FROM logs ORDER BY id DESC LIMIT 3";
         ArrayList<Logs> logs = new ArrayList<Logs>();
         String event = "LOGIN";
         String desc = "Login Fail";
