@@ -283,6 +283,9 @@ public class Register extends javax.swing.JPanel {
         if(frame.main.sqlite.doesUserExist(usernameFld.getText())) {
             JOptionPane.showMessageDialog(null, "Error: Username already exists.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
         }
+        int position = usernameFld.getCaretPosition();
+        usernameFld.setText(usernameFld.getText().toLowerCase());
+        usernameFld.setCaretPosition(position);
     }//GEN-LAST:event_usernameFldKeyReleased
 
     private void passwordFldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFldKeyReleased

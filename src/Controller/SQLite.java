@@ -13,9 +13,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SQLite {
     
@@ -196,7 +198,7 @@ public class SQLite {
     }
     
     public void addLogs(String event, String username, String desc) {
-        String timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        Timestamp timestamp = new Timestamp(new Date().getTime());
         String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES(?,?,?,?)";
         
         try {
@@ -205,7 +207,7 @@ public class SQLite {
             pstmt.setString(1, event);
             pstmt.setString(2, username);
             pstmt.setString(3, desc);
-            pstmt.setString(4, timestamp);
+            pstmt.setString(4, timestamp.toString());
             
             pstmt.executeUpdate();
         } catch (Exception ex) {
@@ -307,6 +309,35 @@ public class SQLite {
             ex.printStackTrace();
         }
         return logs;
+    }
+    
+    public boolean getLoginLogs(String user){
+        String sql = "SELECT id, event, username, desc, timestamp FROM logs LIMIT 3";
+        ArrayList<Logs> logs = new ArrayList<Logs>();
+        String event = "LOGIN";
+        String desc = "Login Fail";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)){
+            
+            
+            while (rs.next()) {
+                if (rs.getString("username").equals(user) && rs.getString("desc").equals(desc)) {
+                    logs.add(new Logs(rs.getInt("id"),
+                                       rs.getString("event"),
+                                       rs.getString("username"),
+                                       rs.getString("desc"),
+                                       rs.getString("timestamp")));
+                }
+            }
+            
+            if (logs.size() == 3)
+                return false;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return true;
     }
     
     public ArrayList<Product> getProduct(){
@@ -436,7 +467,7 @@ public class SQLite {
                 existingUsers.add(rs.getString("username"));
             }
             
-            System.out.println(existingUsers);
+            //System.out.println(existingUsers);
             
             if(existingUsers.isEmpty()) {
                 System.out.println("username is free");
@@ -444,7 +475,7 @@ public class SQLite {
             }
             
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.print(ex);
         }
         System.out.println("username already exists!");
         return true;
@@ -473,5 +504,170 @@ public class SQLite {
             e.printStackTrace();
         }
         return generatedPassword;
+    }
+    
+    public ArrayList<String> getUserSecQues(String user) {
+        String sql = "SELECT question FROM secques";
+        List<String> dbques = new ArrayList<>();
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)){
+            
+            while (rs.next()) {
+                dbques.add(rs.getString("question"));
+            }
+        } catch (Exception ex) {}
+        
+        sql = "SELECT q1 FROM users WHERE username=?";
+        ArrayList<String> secques = new ArrayList<>();
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                secques.add(dbques.get(Integer.parseInt(rs.getString("q1"))-1));
+            }      
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        sql = "SELECT q2 FROM users WHERE username=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                secques.add(dbques.get(Integer.parseInt(rs.getString("q2"))-1));
+            }      
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return secques;
+    }
+    
+    public boolean validatePassword(String user, String password) {
+        String sql = "SELECT salt FROM users WHERE username=?";
+        boolean valid = false;
+        String salt = "";
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                salt = rs.getString("salt");
+            }      
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        String checkPass = getSecurePassword(password, salt);
+        
+        sql = "SELECT password FROM users WHERE username=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                if (checkPass.equals(rs.getString("password"))){
+                    valid = true;
+                }
+            }      
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return valid;
+    }
+    
+    public boolean validateSecQues(String user, String ans1, String ans2) {
+        String sql = "SELECT a1 FROM users WHERE username=?";
+        boolean valid = false;
+        String answer = "";
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                answer = rs.getString("a1");
+            }      
+            
+            if (ans1.equals(answer))
+                valid = true;
+            else
+                valid = false;
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        if (valid) {
+            sql = "SELECT a2 FROM users WHERE username=?";
+
+            try {
+                Connection conn = DriverManager.getConnection(driverURL);
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, user);
+
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    answer = rs.getString("a2");
+                }
+                
+                if (ans2.equals(answer))
+                    valid = true;
+                else
+                    valid = false;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        return valid;
+    }
+    
+    public void updatePassword(String user, String password) {
+        String sql = "SELECT salt FROM users WHERE username=?";
+        String salt = "";
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                salt = rs.getString("salt");
+            }      
+            
+            String secpass = getSecurePassword(password, salt);
+        
+            sql = "UPDATE users SET password=? WHERE username=?";
+
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, secpass);
+                pstmt.setString(2, user);
+
+                pstmt.executeUpdate();           
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        
     }
 }

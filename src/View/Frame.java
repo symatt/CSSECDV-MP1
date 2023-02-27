@@ -207,6 +207,7 @@ public class Frame extends javax.swing.JFrame {
     public Main main;
     public Login loginPnl = new Login();
     public Register registerPnl = new Register();
+    public ForgetPassword1 forgetPassword1Pnl = new ForgetPassword1();
     
     private AdminHome adminHomePnl = new AdminHome();
     private ManagerHome managerHomePnl = new ManagerHome();
@@ -224,15 +225,18 @@ public class Frame extends javax.swing.JFrame {
         this.main = controller;
         loginPnl.frame = this;
         registerPnl.frame = this;
+        forgetPassword1Pnl.frame = this;
         
         adminHomePnl.init(main.sqlite);
         clientHomePnl.init(main.sqlite);
         managerHomePnl.init(main.sqlite);
         staffHomePnl.init(main.sqlite);
+        forgetPassword1Pnl.init(main.sqlite);
         
         Container.setLayout(frameView);
         Container.add(loginPnl, "loginPnl");
         Container.add(registerPnl, "registerPnl");
+        Container.add(forgetPassword1Pnl, "forgetPassword1Pnl");
         Container.add(HomePnl, "homePnl");
         frameView.show(Container, "loginPnl");
         
@@ -255,6 +259,10 @@ public class Frame extends javax.swing.JFrame {
     
     public void registerNav(){
         frameView.show(Container, "registerPnl");
+    }
+    
+    public void forgetPassword1Nav() {
+        frameView.show(Container, "forgetPassword1Pnl");
     }
     
     public void registerAction(String username, String password, String confpass, int securityQ1, String securityA1, int securityQ2, String securityA2) {
@@ -288,4 +296,5 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JButton managerBtn;
     private javax.swing.JButton staffBtn;
     // End of variables declaration//GEN-END:variables
+
 }
