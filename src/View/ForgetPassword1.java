@@ -357,6 +357,7 @@ public class ForgetPassword1 extends javax.swing.JPanel {
         
         if (valid) {
             sqlite.updatePassword(usernameFld.getText(), passwordFld.getText());
+            frame.main.sqlite.addLogs("UPDATE", usernameFld.getText(), "Password updated.");
             JOptionPane.showMessageDialog(null, "Notice: Update successful.", "Notice: Forget Password", JOptionPane.PLAIN_MESSAGE);
             frame.loginNav();
         }

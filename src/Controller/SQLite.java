@@ -312,16 +312,17 @@ public class SQLite {
     }
     
     public boolean getLoginLogs(String user){
-        String sql = "SELECT id, event, username, desc, timestamp FROM logs ORDER BY id DESC LIMIT 3";
+        String sql = "SELECT id, event, username, desc, timestamp FROM logs WHERE username=? ORDER BY id DESC LIMIT 3";
         ArrayList<Logs> logs = new ArrayList<Logs>();
         String event = "LOGIN";
         String desc = "Login Fail";
         
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)){
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user);
             
-            
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 if (rs.getString("username").equals(user) && rs.getString("desc").equals(desc)) {
                     logs.add(new Logs(rs.getInt("id"),
