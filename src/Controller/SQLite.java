@@ -688,12 +688,12 @@ public class SQLite {
             
             while (rs.next()) {
                 roles.add(new User(rs.getString("username"), rs.getInt("role")));
-                System.out.println(roles);
+//                System.out.println(roles);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        System.out.println(roles);
+//        System.out.println(roles);
         return roles.get(0);
     }
     
@@ -718,5 +718,28 @@ public class SQLite {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public ArrayList<History> getUserHistory(String username){
+        String sql = "SELECT id, username, name, stock, timestamp FROM history WHERE username=?";
+        ArrayList<History> histories = new ArrayList<History>();
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                histories.add(new History(rs.getInt("id"),
+                                   rs.getString("username"),
+                                   rs.getString("name"),
+                                   rs.getInt("stock"),
+                                   rs.getString("timestamp")));
+            }
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+        return histories;
     }
 }

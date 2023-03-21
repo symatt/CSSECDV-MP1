@@ -7,7 +7,10 @@ package View;
 
 import Controller.SQLite;
 import Model.Product;
+import Model.User;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -21,6 +24,7 @@ public class MgmtProduct extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    private User loggedUser = null;
     
     public MgmtProduct(SQLite sqlite) {
         initComponents();
@@ -36,6 +40,24 @@ public class MgmtProduct extends javax.swing.JPanel {
     }
 
     public void init(){
+       this.loggedUser = this.sqlite.getLoggedUser();
+        
+        switch(loggedUser.getRole()) {
+            case 2:
+                addBtn.setVisible(false);
+                editBtn.setVisible(false);
+                deleteBtn.setVisible(false);
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            default:
+                break;
+        }
+        
         //      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
@@ -185,6 +207,8 @@ public class MgmtProduct extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, message, "PURCHASE PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
             if (result == JOptionPane.OK_OPTION) {
+                Timestamp timestamp = new Timestamp(new Date().getTime());
+                this.sqlite.addHistory(this.loggedUser.getUsername(), tableModel.getValueAt(table.getSelectedRow(), 0).toString(), Integer.valueOf(stockFld.getText()), timestamp.toString());
                 System.out.println(stockFld.getText());
             }
         }

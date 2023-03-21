@@ -8,6 +8,7 @@ package View;
 import Controller.SQLite;
 import Model.History;
 import Model.Product;
+import Model.User;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -21,6 +22,7 @@ public class MgmtHistory extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    User loggedUser = null;
     
     public MgmtHistory(SQLite sqlite) {
         initComponents();
@@ -40,13 +42,19 @@ public class MgmtHistory extends javax.swing.JPanel {
     }
 
     public void init(){
+        this.loggedUser = this.sqlite.getLoggedUser();
+        System.out.println(this.loggedUser.getUsername());
+        ArrayList<History> history = sqlite.getHistory();;
 //      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
         
 //      LOAD CONTENTS
-        ArrayList<History> history = sqlite.getHistory();
+        if (this.loggedUser.getRole() == 2) {
+            history = sqlite.getUserHistory(loggedUser.getUsername());
+        }
+        
         for(int nCtr = 0; nCtr < history.size(); nCtr++){
             Product product = sqlite.getProduct(history.get(nCtr).getName());
             tableModel.addRow(new Object[]{
@@ -176,6 +184,9 @@ public class MgmtHistory extends javax.swing.JPanel {
 
 //          LOAD CONTENTS
             ArrayList<History> history = sqlite.getHistory();
+            if (this.loggedUser.getRole() == 2) {
+                history = sqlite.getUserHistory(this.loggedUser.getUsername());
+            }
             for(int nCtr = 0; nCtr < history.size(); nCtr++){
                 if(searchFld.getText().contains(history.get(nCtr).getUsername()) || 
                    history.get(nCtr).getUsername().contains(searchFld.getText()) || 
