@@ -43,7 +43,7 @@ public class MgmtHistory extends javax.swing.JPanel {
 
     public void init(){
         this.loggedUser = this.sqlite.getLoggedUser();
-        System.out.println(this.loggedUser.getUsername());
+//        System.out.println(this.loggedUser.getUsername());
         ArrayList<History> history = sqlite.getHistory();;
 //      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
@@ -51,8 +51,19 @@ public class MgmtHistory extends javax.swing.JPanel {
         }
         
 //      LOAD CONTENTS
-        if (this.loggedUser.getRole() == 2) {
-            history = sqlite.getUserHistory(loggedUser.getUsername());
+        switch(loggedUser.getRole()) {
+            case 2:
+                // if user's role is CLIENT, only get that client's history
+                history = sqlite.getUserHistory(this.loggedUser.getUsername());
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            default:
+                break;
         }
         
         for(int nCtr = 0; nCtr < history.size(); nCtr++){
@@ -184,9 +195,22 @@ public class MgmtHistory extends javax.swing.JPanel {
 
 //          LOAD CONTENTS
             ArrayList<History> history = sqlite.getHistory();
-            if (this.loggedUser.getRole() == 2) {
-                history = sqlite.getUserHistory(this.loggedUser.getUsername());
+          
+            switch(loggedUser.getRole()) {
+                case 2:
+                    // if user's role is CLIENT, only get that client's history
+                    history = sqlite.getUserHistory(this.loggedUser.getUsername());
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                default:
+                    break;
             }
+            
             for(int nCtr = 0; nCtr < history.size(); nCtr++){
                 if(searchFld.getText().contains(history.get(nCtr).getUsername()) || 
                    history.get(nCtr).getUsername().contains(searchFld.getText()) || 
