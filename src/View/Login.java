@@ -113,18 +113,19 @@ public class Login extends javax.swing.JPanel {
             if (frame.main.sqlite.doesUserExist(usernameFld.getText())){
                 if (frame.main.sqlite.validatePassword(usernameFld.getText(), passwordFld.getText())) {
                     frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Success");
+                    String username = usernameFld.getText();
                     usernameFld.setText("");
                     passwordFld.setText("");
-                    frame.mainNav();
+                    frame.mainNav(frame.main.sqlite.getUserRole(username));
                 }
                 else {
                     frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Fail");
-                    JOptionPane.showMessageDialog(null, "Error: Username or Password is incorrect", "Error: Login", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error: Username or Password is incorrect.\nIf you do not have an account, please register first.", "Error: Login", JOptionPane.ERROR_MESSAGE);
                 }
             }
             else{
                 frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Fail");
-                JOptionPane.showMessageDialog(null, "Error: Username or Password is incorrect", "Error: Login", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error: Username or Password is incorrect.\nIf you do not have an account, please register first.", "Error: Login", JOptionPane.ERROR_MESSAGE);
             }
         }
         else {

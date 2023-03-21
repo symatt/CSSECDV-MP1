@@ -61,12 +61,12 @@ public class Main {
 //        sqlite.addProduct("Firewall", 3, 1000.0);
 //        sqlite.addProduct("Scanner", 10, 100.0);
 //
-        // Add sample users
-        sqlite.addUser("admin", "qwerty1234", 5);
-        sqlite.addUser("manager", "qwerty1234", 4);
-        sqlite.addUser("staff", "qwerty1234", 3);
-        sqlite.addUser("client1", "qwerty1234", 2);
-        sqlite.addUser("client2", "qwerty1234", 2);
+//        // Add sample users
+//        sqlite.addUser("admin", "qwerty1234", 5);
+//        sqlite.addUser("manager", "qwerty1234", 4);
+//        sqlite.addUser("staff", "qwerty1234", 3);
+//        sqlite.addUser("client1", "qwerty1234", 2);
+//        sqlite.addUser("client2", "qwerty1234", 2);
 //        
         sqlite.addSecQues("In what city were you born?");
         sqlite.addSecQues("What is your mother's maiden name?");

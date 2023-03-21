@@ -411,7 +411,7 @@ public class SQLite {
             System.out.println(ex);
         }
         
-        String sql = "INSERT INTO users(username,password,salt,role) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO users(username,password,salt,q1,a1,q2,a2,role) VALUES(?,?,?,?,?,?,?,?)";
         
         try {
             Connection conn = DriverManager.getConnection(driverURL);
@@ -419,7 +419,11 @@ public class SQLite {
             pstmt.setString(1, username);
             pstmt.setString(2, generatedpassword);
             pstmt.setString(3, salt);
-            pstmt.setInt(4, role);
+            pstmt.setInt(4, 1);
+            pstmt.setString(5, "answer1");
+            pstmt.setInt(6, 2);
+            pstmt.setString(7, "answer2");
+            pstmt.setInt(8, role);
             
             pstmt.executeUpdate();
         } catch (Exception ex) {
@@ -670,5 +674,26 @@ public class SQLite {
         }
         
         
+    }
+    
+    public int getUserRole(String user) {
+        String sql = "SELECT role FROM users WHERE username=?";
+        ArrayList<Integer> roles = new ArrayList<Integer>();
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                roles.add(rs.getInt("role"));
+                System.out.println(roles);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        System.out.println(roles);
+        return roles.get(0);
     }
 }
