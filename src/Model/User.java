@@ -20,6 +20,11 @@ public class User {
         this.locked = locked;
     }
     
+   public User(String username, int role) {
+       this.username = username;
+       this.role = role;
+   }
+    
     public int getId() {
         return id;
     }

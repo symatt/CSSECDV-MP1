@@ -52,9 +52,9 @@ public class Main {
 //        sqlite.addHistory("staff", "Scanner", 1, "2019-04-03 14:30:02.000");
 //        
 //        // Add sample logs
-//        sqlite.addLogs("NOTICE", "admin", "User creation successful", new Timestamp(new Date().getTime()).toString());
-//        sqlite.addLogs("NOTICE", "manager", "User creation successful", new Timestamp(new Date().getTime()).toString());
-//        sqlite.addLogs("NOTICE", "admin", "User creation successful", new Timestamp(new Date().getTime()).toString());
+//        sqlite.addLogs("NOTICE", "admin", "User creation successful");
+//        sqlite.addLogs("NOTICE", "manager", "User creation successful");
+//        sqlite.addLogs("NOTICE", "admin", "User creation successful");
 //        
 //        // Add sample product
 //        sqlite.addProduct("Antivirus", 5, 500.0);
@@ -68,14 +68,14 @@ public class Main {
 //        sqlite.addUser("client1", "qwerty1234", 2);
 //        sqlite.addUser("client2", "qwerty1234", 2);
 //        
-        sqlite.addSecQues("In what city were you born?");
-        sqlite.addSecQues("What is your mother's maiden name?");
-        sqlite.addSecQues("What was your favorite food as a child?");
-        sqlite.addSecQues("What year was your father (or mother) born?");
-        sqlite.addSecQues("What is the name of your favorite pet?");
-        sqlite.addSecQues("What high school did you attend?");
-        sqlite.addSecQues("What was the name of your elementary school?");
-        sqlite.addSecQues("What street did you live on in third grade?");
+//        sqlite.addSecQues("In what city were you born?");
+//        sqlite.addSecQues("What is your mother's maiden name?");
+//        sqlite.addSecQues("What was your favorite food as a child?");
+//        sqlite.addSecQues("What year was your father (or mother) born?");
+//        sqlite.addSecQues("What is the name of your favorite pet?");
+//        sqlite.addSecQues("What high school did you attend?");
+//        sqlite.addSecQues("What was the name of your elementary school?");
+//        sqlite.addSecQues("What street did you live on in third grade?");
 
 //        
 //        // Get users
@@ -117,7 +117,7 @@ public class Main {
 //        }
         
         // Initialize User Interface
-        Frame frame = new Frame();
+        Frame frame = new Frame(sqlite);
         frame.init(this);
     }
     

@@ -1,6 +1,8 @@
 package View;
 
 import Controller.Main;
+import Controller.SQLite;
+import Model.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -9,8 +11,13 @@ import java.util.*;
 
 public class Frame extends javax.swing.JFrame {
 
-    public Frame() {
+    public SQLite sqlite;
+    
+    public Frame(SQLite sqlite) {
         initComponents();
+        this.sqlite = sqlite;
+        this.sqlite.logoutUsers();
+        System.out.println("LOG OUT ALL USERS ON CREATION");
     }
 
     @SuppressWarnings("unchecked")
@@ -201,6 +208,7 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_clientBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
+        this.sqlite.logoutUsers();
         frameView.show(Container, "loginPnl");
     }//GEN-LAST:event_logoutBtnActionPerformed
 
@@ -249,12 +257,15 @@ public class Frame extends javax.swing.JFrame {
         this.setVisible(true);
     }
     
-    public void mainNav(int role){
+    public void mainNav(){
         adminBtn.setVisible(false);
         managerBtn.setVisible(false);
         staffBtn.setVisible(false);
         clientBtn.setVisible(false);
-        switch(role) {
+        
+        User loggedUser = this.sqlite.getLoggedUser();
+        
+        switch(loggedUser.getRole()) {
             case 2:
                 clientBtn.setVisible(true);
                 contentView.show(Content, "clientHomePnl");

@@ -99,7 +99,8 @@ public class SQLite {
             + " q2 INTEGER NOT NULL,\n"
             + " a2 TEXT NOT NULL,\n"
             + " role INTEGER DEFAULT 2,\n"
-            + " locked INTEGER DEFAULT 0\n"
+            + " locked INTEGER DEFAULT 0,\n"
+            + " logged INTEGER DEFAULT 0\n"
             + ");";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -114,7 +115,7 @@ public class SQLite {
     public void createSecQuesTable() {
         String sql = "CREATE TABLE IF NOT EXISTS secques (\n"
             + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-            + " question TEXT NOT NULL\n"
+            + " question TEXT NOT NULL UNIQUE\n"
             + ");";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -676,18 +677,17 @@ public class SQLite {
         
     }
     
-    public int getUserRole(String user) {
-        String sql = "SELECT role FROM users WHERE username=?";
-        ArrayList<Integer> roles = new ArrayList<Integer>();
+    public User getLoggedUser() {
+        String sql = "SELECT username, role FROM users WHERE logged=1";
+        ArrayList<User> roles = new ArrayList<User>();
         
         try {
             Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, user);
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                roles.add(rs.getInt("role"));
+                roles.add(new User(rs.getString("username"), rs.getInt("role")));
                 System.out.println(roles);
             }
         } catch (Exception ex) {
@@ -695,5 +695,28 @@ public class SQLite {
         }
         System.out.println(roles);
         return roles.get(0);
+    }
+    
+    public void loginUser(String user) {
+        String sql = "UPDATE users SET logged=1 WHERE username=?";
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void logoutUsers() {
+        String sql = "UPDATE users SET logged=0";
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
