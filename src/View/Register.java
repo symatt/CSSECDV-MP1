@@ -248,7 +248,6 @@ public class Register extends javax.swing.JPanel {
         
             
         if(registerable) {
-            
             frame.main.sqlite.addUser(usernameFld.getText(), passwordFld.getText(), securityQ1.getSelectedIndex(), securityA1.getText(), securityQ2.getSelectedIndex(), securityA2.getText());
             frame.main.sqlite.addLogs("REGISTER", usernameFld.getText(), "User successfully registered.");
             JOptionPane.showMessageDialog(null, "Registration Successful", "Success: Registration", JOptionPane.PLAIN_MESSAGE);

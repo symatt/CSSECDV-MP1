@@ -191,6 +191,8 @@ public class MgmtUser extends javax.swing.JPanel {
             if(result != null){
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 System.out.println(result.charAt(0));
+                this.sqlite.updateRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(),Character.getNumericValue(result.charAt(0)));
+                this.init();
             }
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
@@ -201,6 +203,8 @@ public class MgmtUser extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                this.sqlite.updateRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(),0);
+                this.init();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
@@ -216,6 +220,8 @@ public class MgmtUser extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                this.sqlite.toggleLock(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                this.init();
             }
         }
     }//GEN-LAST:event_lockBtnActionPerformed
@@ -234,12 +240,69 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             
             if (result == JOptionPane.OK_OPTION) {
-                System.out.println(password.getText());
-                System.out.println(confpass.getText());
+//                System.out.println(password.getText());
+//                System.out.println(confpass.getText());
+                boolean updateable = true;
+                // if passwords match
+                if (!password.getText().equals(confpass.getText())) {
+                    updateable = false;
+                    JOptionPane.showMessageDialog(null, "Error: Passwords do not match.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
+                }
+                
+                // if password is strong enough
+                switch(checkPassStrength(password.getText())) {
+                    case "Strong":
+                        break;
+                    default:
+                        updateable = false;
+                        JOptionPane.showMessageDialog(null, "Error: Password is too weak.", "Error: Registration", JOptionPane.ERROR_MESSAGE);
+                        break;
+                }
+                
+                if (updateable) {
+                    this.sqlite.updatePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), confpass.getText());
+                }
             }
         }
     }//GEN-LAST:event_chgpassBtnActionPerformed
+    
+    public String checkPassStrength(String inputPassword) {
+        int count = 0;
 
+        if(inputPassword.length() >= 8 && inputPassword.length() <= 32) {
+            if(inputPassword.matches(".*[a-z].*"))
+                count++;
+            if(inputPassword.matches(".*[A-Z].*"))
+                count++;
+            if(inputPassword.matches(".*\\d.*"))
+                count++;
+            if(inputPassword.matches(".*[*.!@#$%^&=_+-].*"))
+                count++;
+        }
+        else if (inputPassword.length() > 32)
+            return "Too Long";
+        
+        String passwordStrength;
+        
+        switch(count) {
+            case 1:
+                passwordStrength = "Weak";
+               break;
+            case 2:
+                passwordStrength = "Fair";
+               break;
+            case 3:
+                passwordStrength = "Good";
+               break;
+            case 4:
+                passwordStrength = "Strong";
+               break;
+            default:
+                passwordStrength = "Too Short";
+        }
+        
+        return passwordStrength; 
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton chgpassBtn;

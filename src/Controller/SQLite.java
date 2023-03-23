@@ -59,7 +59,8 @@ public class SQLite {
             + " event TEXT NOT NULL,\n"
             + " username TEXT NOT NULL,\n"
             + " desc TEXT NOT NULL,\n"
-            + " timestamp TEXT NOT NULL\n"
+            + " timestamp TEXT NOT NULL,\n"
+            + " cleared INTEGER NOT NULL DEFAULT 0\n"
             + ");";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -292,7 +293,7 @@ public class SQLite {
     }
     
     public ArrayList<Logs> getLogs(){
-        String sql = "SELECT id, event, username, desc, timestamp FROM logs";
+        String sql = "SELECT id, event, username, desc, timestamp FROM logs WHERE cleared=0";
         ArrayList<Logs> logs = new ArrayList<Logs>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -363,7 +364,7 @@ public class SQLite {
     }
     
     public ArrayList<User> getUsers(){
-        String sql = "SELECT id, username, password, role, locked FROM users";
+        String sql = "SELECT id, username, password, role, locked FROM users WHERE role!=0";
         ArrayList<User> users = new ArrayList<User>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -741,5 +742,89 @@ public class SQLite {
             System.out.print(ex);
         }
         return histories;
+    }
+    
+    public void updateRole(String username, int role) {
+        String sql = "UPDATE users SET role=? WHERE username=?";
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, role);
+            pstmt.setString(2, username);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void toggleLock(String username) {
+        String sql = "SELECT locked FROM users WHERE username=?";
+        
+        ArrayList<Integer> locks = new ArrayList<Integer>();
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                locks.add(rs.getInt("locked"));
+            }
+        } catch(Exception ex) {
+            
+        }
+        
+        if (locks.get(0) == 0) {
+            sql = "UPDATE users SET locked=1 WHERE username=?";
+        }
+        else {
+            sql = "UPDATE users SET locked=0 WHERE username=?";
+        }
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void changePassword(String username, String password) {
+        String salt = null;
+        String generatedpassword = null;
+        try {
+            salt = getSalt();
+            generatedpassword = getSecurePassword(password, salt);
+        } catch(Exception ex) {
+            System.out.println(ex);
+        }
+        
+        String sql = "UPDATE users SET password=?, salt=? WHERE username=?";
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, generatedpassword);
+            pstmt.setString(2, salt);
+            pstmt.setString(3, username);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void clearLogs() {
+        String sql = "UPDATE logs SET cleared=1";
+        
+        try {
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
     }
 }
