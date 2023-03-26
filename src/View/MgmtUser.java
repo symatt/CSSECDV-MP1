@@ -189,8 +189,8 @@ public class MgmtUser extends javax.swing.JPanel {
                 "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1]);
             
             if(result != null){
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                System.out.println(result.charAt(0));
+                if(this.sqlite.DEBUG_MODE == 1) System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                if(this.sqlite.DEBUG_MODE == 1) System.out.println(result.charAt(0));
                 this.sqlite.updateRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(),Character.getNumericValue(result.charAt(0)));
                 this.sqlite.addLogs("EDIT ROLE", this.sqlite.getLoggedUser().getUsername(), "Edited " + tableModel.getValueAt(table.getSelectedRow(), 0).toString() + " to role " + result.charAt(0));
                 this.init();
@@ -203,7 +203,7 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                if(this.sqlite.DEBUG_MODE == 1) System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 this.sqlite.updateRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(),0);
                 this.sqlite.addLogs("DELETE USER", this.sqlite.getLoggedUser().getUsername(), "Deleted user " + tableModel.getValueAt(table.getSelectedRow(), 0).toString());
                 this.init();
@@ -221,7 +221,7 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                if(this.sqlite.DEBUG_MODE == 1) System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 this.sqlite.toggleLock(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
                 String event = state.toUpperCase();
                 this.sqlite.addLogs(event, this.sqlite.getLoggedUser().getUsername(), state + " user " + tableModel.getValueAt(table.getSelectedRow(), 0).toString());

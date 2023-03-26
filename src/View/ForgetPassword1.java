@@ -284,7 +284,7 @@ public class ForgetPassword1 extends javax.swing.JPanel {
         // TODO add your handling code here:
         String inputPassword = passwordFld.getText();
         String strength = frame.main.checkPassStrength(inputPassword);
-        if(DEBUG_MODE == 1) System.out.println(strength);
+        if(this.sqlite.DEBUG_MODE == 1) System.out.println(strength);
 
         switch(strength) {
             case "Strong":
