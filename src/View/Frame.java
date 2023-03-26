@@ -6,8 +6,12 @@ import Model.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import javax.swing.WindowConstants;
 import java.util.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JOptionPane;
 
 public class Frame extends javax.swing.JFrame {
 
@@ -17,7 +21,7 @@ public class Frame extends javax.swing.JFrame {
         initComponents();
         this.sqlite = sqlite;
         this.sqlite.logoutUsers();
-        System.out.println("LOG OUT ALL USERS ON CREATION");
+        if (this.sqlite.DEBUG_MODE == 1) System.out.println("LOG OUT ALL USERS ON CREATION");
     }
 
     @SuppressWarnings("unchecked")
@@ -208,6 +212,7 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_clientBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
+        this.sqlite.addLogs("LOGOUT", this.sqlite.getLoggedUser().getUsername(), "User logged out.");
         this.sqlite.logoutUsers();
         frameView.show(Container, "loginPnl");
     }//GEN-LAST:event_logoutBtnActionPerformed
@@ -287,6 +292,18 @@ public class Frame extends javax.swing.JFrame {
         }
         
         frameView.show(Container, "homePnl");
+        
+        Action logout = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                frameView.show(Container, "loginPnl");
+                sqlite.addLogs("LOGOUT", sqlite.getLoggedUser().getUsername(), "Session timeout.");
+                sqlite.logoutUsers();
+                JOptionPane.showMessageDialog(null, "Notice: Session has been idle for 5 minutes. Please log in again.", "Notice: Idle Timer Expired", JOptionPane.OK_OPTION);
+            }
+        };
+   
+        InactivityListener listener = new InactivityListener(this, logout, 5);
+        listener.start();
     }
     
     public void loginNav(){

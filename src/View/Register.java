@@ -290,7 +290,6 @@ public class Register extends javax.swing.JPanel {
     private void passwordFldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFldKeyReleased
         String inputPassword = passwordFld.getText();
         String strength = frame.main.checkPassStrength(inputPassword);
-        System.out.println(strength);
 
         switch(strength) {
             case "Strong":

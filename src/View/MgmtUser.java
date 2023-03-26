@@ -192,6 +192,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 System.out.println(result.charAt(0));
                 this.sqlite.updateRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(),Character.getNumericValue(result.charAt(0)));
+                this.sqlite.addLogs("EDIT ROLE", this.sqlite.getLoggedUser().getUsername(), "Edited " + tableModel.getValueAt(table.getSelectedRow(), 0).toString() + " to role " + result.charAt(0));
                 this.init();
             }
         }
@@ -204,6 +205,7 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 this.sqlite.updateRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(),0);
+                this.sqlite.addLogs("DELETE USER", this.sqlite.getLoggedUser().getUsername(), "Deleted user " + tableModel.getValueAt(table.getSelectedRow(), 0).toString());
                 this.init();
             }
         }
@@ -221,6 +223,8 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 this.sqlite.toggleLock(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                String event = state.toUpperCase();
+                this.sqlite.addLogs(event, this.sqlite.getLoggedUser().getUsername(), state + " user " + tableModel.getValueAt(table.getSelectedRow(), 0).toString());
                 this.init();
             }
         }
@@ -261,6 +265,8 @@ public class MgmtUser extends javax.swing.JPanel {
                 
                 if (updateable) {
                     this.sqlite.updatePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), confpass.getText());
+                    this.sqlite.addLogs("CHANGE PASSWORD", this.sqlite.getLoggedUser().getUsername(), "Updated password for user " + tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                    JOptionPane.showMessageDialog(null, "Success: Updated Password.", "Success: Change Password", JOptionPane.OK_OPTION);
                 }
             }
         }

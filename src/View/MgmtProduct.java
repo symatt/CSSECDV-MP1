@@ -209,6 +209,8 @@ public class MgmtProduct extends javax.swing.JPanel {
             if (result == JOptionPane.OK_OPTION) {
                 Timestamp timestamp = new Timestamp(new Date().getTime());
                 this.sqlite.addHistory(this.loggedUser.getUsername(), tableModel.getValueAt(table.getSelectedRow(), 0).toString(), Integer.valueOf(stockFld.getText()), timestamp.toString());
+                String desc = "Product: " + tableModel.getValueAt(table.getSelectedRow(), 0).toString() + " Qty: " + stockFld.getText();
+                this.sqlite.addLogs("PURCHASE", this.loggedUser.getUsername(), "Bought " + desc );
                 System.out.println(stockFld.getText());
             }
         }

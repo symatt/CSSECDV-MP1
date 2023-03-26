@@ -200,6 +200,7 @@ public class MgmtHistory extends javax.swing.JPanel {
                 case 2:
                     // if user's role is CLIENT, only get that client's history
                     history = sqlite.getUserHistory(this.loggedUser.getUsername());
+                    sqlite.addLogs("HISTORY", this.loggedUser.getUsername(), "Searched for own history.");
                     break;
                 case 3:
                     break;
