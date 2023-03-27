@@ -109,33 +109,39 @@ public class Login extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        if (frame.main.sqlite.getLoginLogs(usernameFld.getText())) {
-            if (frame.main.sqlite.doesUserExist(usernameFld.getText())){
-                if (frame.main.sqlite.getRole(usernameFld.getText()) != 0) {
-                    if (frame.main.sqlite.validatePassword(usernameFld.getText(), passwordFld.getText())) {
-                        frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Success");
-                        frame.main.sqlite.loginUser(usernameFld.getText());
-                        usernameFld.setText("");
-                        passwordFld.setText("");
-                        frame.mainNav();
+        if (!frame.main.sqlite.checkLock(usernameFld.getText())) {
+            if (frame.main.sqlite.getLoginLogs(usernameFld.getText())) {
+                if (frame.main.sqlite.doesUserExist(usernameFld.getText())){
+                    if (frame.main.sqlite.getRole(usernameFld.getText()) != 0) {
+                        if (frame.main.sqlite.validatePassword(usernameFld.getText(), passwordFld.getText())) {
+                            frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Success");
+                            frame.main.sqlite.loginUser(usernameFld.getText());
+                            usernameFld.setText("");
+                            passwordFld.setText("");
+                            frame.mainNav();
+                        }
+                        else {
+                           frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Fail");
+                            JOptionPane.showMessageDialog(null, "Error: Username or Password is incorrect.", "Error: Login", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                     else {
-                       frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Fail");
-                        JOptionPane.showMessageDialog(null, "Error: Username or Password is incorrect.", "Error: Login", JOptionPane.ERROR_MESSAGE);
+                        frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Fail");
+                        JOptionPane.showMessageDialog(null, "Error: Account is locked. Contact admin to unlock.", "Error: Login", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-                else {
+                else{
                     frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Fail");
-                    JOptionPane.showMessageDialog(null, "Error: Account is locked. Contact admin to unlock.", "Error: Login", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error: Username or Password is incorrect.\nIf you do not have an account, please register first.", "Error: Login", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            else{
-                frame.main.sqlite.addLogs("LOGIN", usernameFld.getText(), "Login Fail");
-                JOptionPane.showMessageDialog(null, "Error: Username or Password is incorrect.\nIf you do not have an account, please register first.", "Error: Login", JOptionPane.ERROR_MESSAGE);
+            else {
+                frame.main.sqlite.toggleLock(usernameFld.getText());
+                JOptionPane.showMessageDialog(null, "Error: User has been locked out due to too many failed login attempts", "Error: Login", JOptionPane.ERROR_MESSAGE);
             }
         }
         else {
-            JOptionPane.showMessageDialog(null, "Error: User has been locked out due to too many failed login attempts", "Error: Login", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error: User has been locked out. Please contact admin to re-enable the account.", "Error: Login", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 

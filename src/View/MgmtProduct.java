@@ -49,8 +49,10 @@ public class MgmtProduct extends javax.swing.JPanel {
                 deleteBtn.setVisible(false);
                 break;
             case 3:
+                purchaseBtn.setVisible(false);
                 break;
             case 4:
+                purchaseBtn.setVisible(false);
                 break;
             case 5:
                 break;
@@ -203,14 +205,27 @@ public class MgmtProduct extends javax.swing.JPanel {
             Object[] message = {
                 "How many " + tableModel.getValueAt(table.getSelectedRow(), 0) + " do you want to purchase?", stockFld
             };
-
+            
+            int stockLeft = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1) + "");
+            
             int result = JOptionPane.showConfirmDialog(null, message, "PURCHASE PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
             if (result == JOptionPane.OK_OPTION) {
                 Timestamp timestamp = new Timestamp(new Date().getTime());
-                this.sqlite.addHistory(this.loggedUser.getUsername(), tableModel.getValueAt(table.getSelectedRow(), 0).toString(), Integer.valueOf(stockFld.getText()), timestamp.toString());
-                String desc = "Product: " + tableModel.getValueAt(table.getSelectedRow(), 0).toString() + " Qty: " + stockFld.getText();
-                this.sqlite.addLogs("PURCHASE", this.loggedUser.getUsername(), "Bought " + desc );
+                if (stockLeft > 0) {
+                    if (stockLeft >= Integer.parseInt(stockFld.getText())){
+                        stockLeft -= Integer.parseInt(stockFld.getText());
+                        this.sqlite.editProduct(tableModel.getValueAt(table.getSelectedRow(), 0) + "", tableModel.getValueAt(table.getSelectedRow(), 0) + "", stockLeft, Double.parseDouble(tableModel.getValueAt(table.getSelectedRow(), 2) + ""));
+                        this.sqlite.addHistory(this.loggedUser.getUsername(), tableModel.getValueAt(table.getSelectedRow(), 0).toString(), Integer.valueOf(stockFld.getText()), timestamp.toString());
+                        String desc = "Product: " + tableModel.getValueAt(table.getSelectedRow(), 0).toString() + " Qty: " + stockFld.getText();
+                        this.sqlite.addLogs("PURCHASE", this.loggedUser.getUsername(), "Bought " + desc );
+                        this.init();
+                    }
+                    else
+                        JOptionPane.showMessageDialog(null, "Error: There are not enough stocks for your purchase.", "Error: Purchase", JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "Error: There are no stocks left.", "Error: Purchase", JOptionPane.ERROR_MESSAGE);
                 if(this.sqlite.DEBUG_MODE == 1) System.out.println(stockFld.getText());
             }
         }
@@ -232,9 +247,9 @@ public class MgmtProduct extends javax.swing.JPanel {
         int result = JOptionPane.showConfirmDialog(null, message, "ADD PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
         if (result == JOptionPane.OK_OPTION) {
-            if(this.sqlite.DEBUG_MODE == 1) System.out.println(nameFld.getText());
-            if(this.sqlite.DEBUG_MODE == 1) System.out.println(stockFld.getText());
-            if(this.sqlite.DEBUG_MODE == 1) System.out.println(priceFld.getText());
+            sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+            this.sqlite.addLogs("PRODUCT ADD", this.loggedUser.getUsername(), "Added " + nameFld.getText()+" "+ stockFld.getText()+" "+ priceFld.getText());
+            this.init();
         }
     }//GEN-LAST:event_addBtnActionPerformed
 
@@ -247,6 +262,8 @@ public class MgmtProduct extends javax.swing.JPanel {
             designer(nameFld, "PRODUCT NAME");
             designer(stockFld, "PRODUCT STOCK");
             designer(priceFld, "PRODUCT PRICE");
+            
+            String oldName = nameFld.getText();
 
             Object[] message = {
                 "Edit Product Details:", nameFld, stockFld, priceFld
@@ -255,9 +272,9 @@ public class MgmtProduct extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, message, "EDIT PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
             if (result == JOptionPane.OK_OPTION) {
-                if(this.sqlite.DEBUG_MODE == 1) System.out.println(nameFld.getText());
-                if(this.sqlite.DEBUG_MODE == 1) System.out.println(stockFld.getText());
-                if(this.sqlite.DEBUG_MODE == 1) System.out.println(priceFld.getText());
+                sqlite.editProduct(oldName, nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                this.sqlite.addLogs("PRODUCT EDIT", this.loggedUser.getUsername(), "Updated " + oldName + " with values " + nameFld.getText()+" "+ stockFld.getText()+" "+ priceFld.getText());
+                this.init();
             }
         }
     }//GEN-LAST:event_editBtnActionPerformed
@@ -267,7 +284,9 @@ public class MgmtProduct extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE PRODUCT", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-                if(this.sqlite.DEBUG_MODE == 1) System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                sqlite.deleteProduct(tableModel.getValueAt(table.getSelectedRow(), 0) + "");
+                this.sqlite.addLogs("PRODUCT DELETE", this.loggedUser.getUsername(), "Deleted " + (tableModel.getValueAt(table.getSelectedRow(), 0) + ""));
+                this.init();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed

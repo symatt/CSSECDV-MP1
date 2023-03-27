@@ -32,7 +32,7 @@ public class Main {
 //        // Create a database
 //        sqlite.createNewDatabase();
 //        
-        // Drop users table if needed
+         // Drop users table if needed
 //        sqlite.dropHistoryTable();
 //        sqlite.dropLogsTable();
 //        sqlite.dropProductTable();
@@ -67,6 +67,7 @@ public class Main {
 //        sqlite.addUser("staff", "qwerty1234", 3);
 //        sqlite.addUser("client1", "qwerty1234", 2);
 //        sqlite.addUser("client2", "qwerty1234", 2);
+//
 //        
 //        sqlite.addSecQues("In what city were you born?");
 //        sqlite.addSecQues("What is your mother's maiden name?");
